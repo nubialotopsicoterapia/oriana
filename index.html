@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi espacio - Oriana</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAF6F1;
+    --card: #FFFFFF;
+    --line: #EDE5DC;
+    --text: #2F3A3C;
+    --soft: #5F6E70;
+    --teal: #3E7C82;
+    --teal-light: #DCEBEC;
+    --coral: #E2826A;
+    --coral-light: #F8E3DC;
+    --coral-dark: #9A4F3C;
+    --teal-dark: #2B5A5F;
+    --serif: 'DM Serif Display', Georgia, 'Times New Roman', serif;
+    --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; padding: 24px 16px 56px; }
+  .wrap { max-width: 520px; margin: 0 auto; }
+
+  /* Header */
+  .header { text-align: center; padding: 32px 16px 24px; }
+  .eyebrow { font-size: 11px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--teal); margin-bottom: 12px; }
+  h1 { font-family: var(--serif); font-weight: 400; font-size: 30px; line-height: 1.2; margin-bottom: 18px; }
+  h1 em { color: var(--coral); }
+  .key-phrase { font-family: var(--serif); font-style: italic; font-size: 17px; line-height: 1.5; color: var(--teal-dark);
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; max-width: 400px; margin: 0 auto; }
+
+  /* Screens */
+  .screen { display: none; }
+  .screen.active { display: block; animation: fadeUp .28s ease; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+  .label { font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--teal); margin: 6px 2px 10px; }
+  h2 { font-family: var(--serif); font-weight: 400; font-size: 22px; line-height: 1.3; margin-bottom: 10px; }
+
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; margin-bottom: 12px; }
+  .card-title { font-family: var(--serif); font-size: 18px; margin-bottom: 6px; }
+  .card p, .card li { font-size: 14.5px; line-height: 1.7; color: var(--soft); }
+  .card p + p { margin-top: 8px; }
+  .card ul { padding-left: 18px; }
+  .card li { margin-bottom: 4px; }
+
+  .alert { border-radius: 14px; padding: 14px 18px; margin-bottom: 14px; font-size: 14.5px; line-height: 1.65; }
+  .alert.warm { background: var(--coral-light); color: var(--coral-dark); }
+  .alert.cool { background: var(--teal-light); color: var(--teal-dark); }
+
+  .phrase { background: var(--bg); border-left: 3px solid var(--teal); border-radius: 0 12px 12px 0; padding: 14px 16px; font-style: italic; font-size: 14.5px; line-height: 1.65; color: var(--soft); margin-bottom: 10px; }
+  .phrase strong { color: var(--text); font-style: normal; font-weight: 500; }
+
+  .thought { background: var(--teal-light); color: var(--teal-dark); border-radius: 14px; padding: 15px 18px; font-size: 14.5px; line-height: 1.7; margin-bottom: 12px; }
+
+  /* Buttons */
+  .opt { display: block; width: 100%; text-align: left; font-family: var(--sans); font-size: 15px; line-height: 1.45; color: var(--text);
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; margin-bottom: 8px; cursor: pointer;
+    transition: background .15s, border-color .15s, transform .1s; }
+  .opt:hover { background: var(--teal-light); border-color: #B7D3D5; transform: translateX(4px); }
+  .opt:active { transform: scale(.98); }
+  .opt small { display: block; font-size: 12.5px; color: var(--soft); margin-top: 3px; }
+  .btn { display: block; width: 100%; font-family: var(--sans); font-size: 15px; font-weight: 500; color: #fff; background: var(--teal);
+    border: none; border-radius: 14px; padding: 15px 18px; margin: 6px 0 8px; cursor: pointer; transition: background .15s, transform .1s; }
+  .btn:hover { background: var(--teal-dark); }
+  .btn:active { transform: scale(.98); }
+  .btn.coral { background: var(--coral); }
+  .btn.coral:hover { background: #cf6f58; }
+  .btn.quiet { background: #fff; color: var(--teal-dark); border: 1px solid var(--line); }
+  .btn.quiet:hover { background: var(--teal-light); }
+  .back { display: inline-block; font-family: var(--sans); font-size: 13px; color: var(--soft); background: transparent;
+    border: 1px solid var(--line); border-radius: 20px; padding: 8px 14px; margin-top: 10px; cursor: pointer; }
+  .back:hover { background: var(--line); color: var(--text); }
+
+  /* Breathing */
+  .breath { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 28px 20px 22px; text-align: center; margin-bottom: 18px; }
+  .ring { width: 96px; height: 96px; border-radius: 50%; margin: 10px auto 22px; background: var(--teal-light); border: 2px solid var(--teal);
+    display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 17px; color: var(--teal-dark);
+    transform: scale(1); transition-property: transform, background; transition-timing-function: ease-in-out; transition-duration: 1s; }
+  .ring.big { transform: scale(1.4); background: #BFDADC; }
+  .b-instr { font-size: 14.5px; color: var(--soft); line-height: 1.6; min-height: 24px; }
+  .b-count { font-size: 12px; color: var(--teal); letter-spacing: .05em; margin-top: 6px; }
+  .b-again { margin-top: 12px; display: none; }
+
+  /* Steps dots */
+  .dots { display: flex; gap: 5px; margin-bottom: 16px; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .dots i.on { background: var(--teal); }
+
+  /* Tool rows */
+  .tool { display: flex; align-items: center; gap: 14px; background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    padding: 14px 16px; margin-bottom: 8px; cursor: pointer; transition: background .15s, border-color .15s, transform .1s; }
+  .tool:hover { background: var(--teal-light); border-color: #B7D3D5; transform: translateX(4px); }
+  .tool-n { width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px; background: var(--teal-light); color: var(--teal-dark);
+    display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 17px; }
+  .tool-name { font-size: 15px; font-weight: 500; }
+  .tool-desc { font-size: 12.5px; color: var(--soft); margin-top: 2px; }
+
+  /* Two columns */
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .col { border-radius: 14px; padding: 14px; }
+  .col.a { background: var(--teal-light); }
+  .col.b { background: var(--coral-light); }
+  .col h4 { font-size: 12px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 8px; }
+  .col.a h4 { color: var(--teal-dark); }
+  .col.b h4 { color: var(--coral-dark); }
+  .col p { font-size: 13px; line-height: 1.55; color: var(--text); margin-bottom: 8px; }
+  .col textarea { margin-top: 4px; min-height: 90px; background: rgba(255,255,255,.75); }
+  @media (max-width: 420px) { .two { grid-template-columns: 1fr; } }
+
+  /* Anchor list */
+  .anchor { display: flex; gap: 14px; align-items: flex-start; padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 14.5px; color: var(--soft); line-height: 1.55; }
+  .anchor:last-child { border-bottom: none; }
+  .anchor b { font-family: var(--serif); font-weight: 400; font-size: 20px; color: var(--coral); min-width: 18px; line-height: 1.1; }
+
+  /* Forms */
+  label.f { display: block; font-size: 12.5px; font-weight: 500; color: var(--soft); margin: 12px 0 6px; }
+  textarea, select { width: 100%; font-family: var(--sans); font-size: 14.5px; color: var(--text); background: var(--bg);
+    border: 1px solid var(--line); border-radius: 10px; padding: 12px; line-height: 1.6; resize: vertical; min-height: 80px; }
+  select { min-height: 0; resize: none; }
+  textarea:focus, select:focus { outline: none; border-color: var(--teal); }
+  .entry { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; }
+  .entry-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 8px; }
+  .entry-date { font-size: 11.5px; color: var(--soft); }
+  .entry-del { background: none; border: none; font-size: 20px; line-height: 1; color: #B5ADA5; cursor: pointer; padding: 0 4px; }
+  .entry-del:hover { color: var(--coral); }
+  .entry p { font-size: 14px; line-height: 1.6; color: var(--text); margin-top: 4px; }
+  .entry p span { font-size: 11px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--teal); display: block; }
+  .empty { text-align: center; color: var(--soft); font-size: 14px; line-height: 1.7; padding: 24px 16px; }
+  .saved { font-size: 12.5px; color: var(--teal); min-height: 18px; margin-top: 6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <div class="eyebrow">Tu espacio</div>
+    <h1>Hola, <em>Oriana</em></h1>
+    <div class="key-phrase">Puedo estar ansiosa sin hacerle caso a todos los pensamientos que tengo cuando estoy ansiosa.</div>
+  </div>
+
+  <!-- INICIO -->
+  <div class="screen active" id="home">
+    <div class="label">¿Qué necesitas ahora?</div>
+    <button class="opt" onclick="show('pausa')">Estoy ansiosa ahora</button>
+    <button class="opt" onclick="show('tools')">Quiero repasar mis herramientas</button>
+    <button class="opt" onclick="show('quien')">Quiero recordar quién quiero ser</button>
+    <button class="opt" onclick="show('apoyo')">Necesito apoyo</button>
+    <button class="opt" onclick="show('registro')">Quiero anotar algo<small>Mi registro personal</small></button>
+  </div>
+
+  <!-- PAUSA -->
+  <div class="screen" id="pausa">
+    <div class="dots"><i class="on"></i><i></i><i></i></div>
+    <div class="label">Primero, una pausa</div>
+    <div class="breath">
+      <div class="ring" id="ring">Inhala</div>
+      <div class="b-instr" id="binstr">Antes de pensar, vuelve al cuerpo. No tienes que resolver nada ahora.</div>
+      <div class="b-count" id="bcount"></div>
+      <button class="btn quiet b-again" id="bagain" onclick="startBreath()">Respirar otra vez</button>
+    </div>
+    <div class="label">¿Qué está pasando?</div>
+    <button class="opt" onclick="show('fa')">Siento presión en el pecho, los brazos pesados</button>
+    <button class="opt" onclick="show('fb')">Él no me responde y mi mente se dispara</button>
+    <button class="opt" onclick="show('fc')">Tengo ganas de dejar de responderle</button>
+    <button class="opt" onclick="show('fd')">Mi cabeza va de un pensamiento a otro</button>
+    <button class="back" onclick="show('home')">← Volver</button>
+  </div>
+
+  <!-- A: cuerpo -->
+  <div class="screen" id="fa">
+    <div class="dots"><i></i><i class="on"></i><i></i></div>
+    <div class="alert cool">Es tu cuerpo en alerta. Ya lo has vivido antes y ha pasado.</div>
+    <div class="label">Nómbralo</div>
+    <div class="phrase"><strong>"Estoy ansiosa."</strong> Solo eso. No hace falta explicarlo ni resolverlo.</div>
+    <div class="card">
+      <div class="card-title">Las ganas de caminar, correr o llorar</div>
+      <p>Son válidas. Puedes caminar o llorar <em>con</em> la ansiedad, sin dejar que ella decida qué hacer ni qué escribir.</p>
+    </div>
+    <div class="label">Pregúntate</div>
+    <div class="thought">¿Qué necesito ahora mismo?<br><br>
+      · Moverme un rato<br>· Hablar con mamá<br>· Respirar un poco más<br>· Estar sola un momento</div>
+    <button class="btn" onclick="show('cierre')">Ya sé qué necesito</button>
+    <button class="back" onclick="show('pausa')">← Volver</button>
+  </div>
+
+  <!-- B: sin respuesta -->
+  <div class="screen" id="fb">
+    <div class="dots"><i></i><i class="on"></i><i></i></div>
+    <div class="alert warm">Cuando no responde rápido, se siente como si se estuviera acabando el mundo. Es una sensación real, y también es la ansiedad hablando.</div>
+    <div class="label">Hechos vs. interpretaciones</div>
+    <div class="two">
+      <div class="col a">
+        <h4>Lo que sé con certeza</h4>
+        <p>Ej: "No ha respondido aún."</p>
+        <textarea placeholder="Escribe aquí..."></textarea>
+      </div>
+      <div class="col b">
+        <h4>Lo que estoy interpretando</h4>
+        <p>Ej: "Ya no me quiere."</p>
+        <textarea placeholder="Escribe aquí..."></textarea>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">El volante</div>
+      <p>La ansiedad puede ir en el carro, y los pensamientos también. Pero tú conduces.</p>
+    </div>
+    <div class="phrase"><strong>Regla de espera:</strong> no actúo desde el pico del impulso. Primero cuerpo, después decido.</div>
+    <button class="btn" onclick="show('cierre')">Seguir</button>
+    <button class="back" onclick="show('pausa')">← Volver</button>
+  </div>
+
+  <!-- C: dejar de responder -->
+  <div class="screen" id="fc">
+    <div class="dots"><i></i><i class="on"></i><i></i></div>
+    <div class="alert cool">Dejar de responder ha sido tu forma de protegerte. Tiene sentido, y vale la pena mirar si te acerca a quien quieres ser.</div>
+    <div class="label">Pregúntate</div>
+    <div class="card">
+      <ul>
+        <li>¿Lo hago para cuidarme o para castigar?</li>
+        <li>¿Qué quiero expresar?</li>
+        <li>Si quiero hablar, ¿puedo hablar?</li>
+        <li>¿Quién quiero ser en esta relación?</li>
+      </ul>
+    </div>
+    <div class="label">Tienes dos caminos</div>
+    <div class="card">
+      <div class="card-title">Esperar y volver al cuerpo</div>
+      <p>Dejar pasar el pico del impulso, respirar, moverte. Después decides con más calma.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Responder desde ti</div>
+      <p>Sin guion y sin castigo. Si quieres hablar, hablas. Si quieres expresar algo, lo expresas.</p>
+    </div>
+    <button class="btn coral" onclick="show('quien')">Ver quién quiero ser</button>
+    <button class="btn" onclick="show('cierre')">Seguir</button>
+    <button class="back" onclick="show('pausa')">← Volver</button>
+  </div>
+
+  <!-- D: pensamientos -->
+  <div class="screen" id="fd">
+    <div class="dots"><i></i><i class="on"></i><i></i></div>
+    <div class="alert cool">Durante el día unos pensamientos son positivos y otros negativos. Ninguno es el conductor.</div>
+    <div class="label">Prueba esto</div>
+    <div class="phrase">En lugar de <em>"¿será que no me quiere?"</em><br>→ <strong>"Estoy teniendo el pensamiento de que quizás no me quiere."</strong></div>
+    <div class="phrase">En lugar de <em>"no soy suficiente físicamente"</em><br>→ <strong>"Estoy teniendo el pensamiento de que no soy suficiente."</strong></div>
+    <div class="phrase">En lugar de <em>"no sé qué hacer"</em><br>→ <strong>"Estoy teniendo el pensamiento de que no sé qué hacer."</strong></div>
+    <div class="card">
+      <div class="card-title">Arena movediza</div>
+      <p>Cuanto más peleas con el pensamiento, más te hundes. Soltar te deja moverte: lo notas, lo dejas pasar y vuelves a lo que tienes enfrente.</p>
+    </div>
+    <button class="btn" onclick="show('cierre')">Seguir</button>
+    <button class="back" onclick="show('pausa')">← Volver</button>
+  </div>
+
+  <!-- CIERRE -->
+  <div class="screen" id="cierre">
+    <div class="dots"><i></i><i></i><i class="on"></i></div>
+    <div class="alert cool">Hiciste una pausa y te escuchaste. Eso ya es mucho.</div>
+    <h2>¿Qué necesitas ahora?</h2>
+    <button class="opt" onclick="show('apoyo')">Hablar con mamá o con alguien</button>
+    <button class="opt" onclick="show('quien')">Recordar quién quiero ser</button>
+    <button class="opt" onclick="show('registro')">Anotar lo que pasó</button>
+    <button class="opt" onclick="show('home')">Volver al inicio</button>
+  </div>
+
+  <!-- HERRAMIENTAS -->
+  <div class="screen" id="tools">
+    <div class="label">Tus herramientas</div>
+    <div class="tool" onclick="show('t1')"><div class="tool-n">1</div><div><div class="tool-name">Volver al cuerpo</div><div class="tool-desc">Estar aquí, ahora</div></div></div>
+    <div class="tool" onclick="show('t2')"><div class="tool-n">2</div><div><div class="tool-name">Hechos vs. interpretaciones</div><div class="tool-desc">Separar lo que sé de lo que imagino</div></div></div>
+    <div class="tool" onclick="show('t3')"><div class="tool-n">3</div><div><div class="tool-name">Pensamientos pasajeros</div><div class="tool-desc">El volante: tú conduces</div></div></div>
+    <div class="tool" onclick="show('t4')"><div class="tool-n">4</div><div><div class="tool-name">El impulso y la espera</div><div class="tool-desc">Arena movediza</div></div></div>
+    <div class="tool" onclick="show('t5')"><div class="tool-n">5</div><div><div class="tool-name">Ser yo en la relación</div><div class="tool-desc">Responder desde ti, sin castigar</div></div></div>
+    <div class="tool" onclick="show('t6')"><div class="tool-n">6</div><div><div class="tool-name">Pedir apoyo</div><div class="tool-desc">Decirlo, aunque dé pena</div></div></div>
+    <!-- Para agregar una herramienta nueva: sumar un bloque .tool aquí y una pantalla .screen con su id. -->
+    <button class="back" onclick="show('home')">← Volver al inicio</button>
+  </div>
+
+  <div class="screen" id="t1">
+    <div class="label">Volver al cuerpo</div>
+    <div class="card"><div class="card-title">Cuando la mente se va lejos</div><p>Nombra, en silencio o en voz alta:</p></div>
+    <div class="card">
+      <div class="anchor"><b>3</b><div>cosas que puedes <strong>ver</strong> ahora mismo</div></div>
+      <div class="anchor"><b>2</b><div>cosas que puedes <strong>escuchar</strong></div></div>
+      <div class="anchor"><b>1</b><div>cosa que <strong>sientes</strong> en el cuerpo: el suelo bajo tus pies, el aire en la cara, el peso de tus brazos</div></div>
+    </div>
+    <div class="card"><p>Luego pregúntate: <strong>¿qué necesito?</strong> Tu cuerpo casi siempre lo sabe.</p></div>
+    <button class="back" onclick="show('tools')">← Volver</button>
+  </div>
+
+  <div class="screen" id="t2">
+    <div class="label">Hechos vs. interpretaciones</div>
+    <div class="card"><div class="card-title">Dos columnas</div><p>Cuando la ansiedad sube, los pensamientos se sienten como hechos. Sepáralos.</p></div>
+    <div class="two">
+      <div class="col a"><h4>Hecho</h4><p>Lo que podría ver una cámara.<br><em>"No ha respondido aún."</em></p></div>
+      <div class="col b"><h4>Interpretación</h4><p>Lo que mi mente agrega.<br><em>"Ya no me quiere."</em></p></div>
+    </div>
+    <div class="thought">Si no estoy segura de que algo es un hecho, lo trato como una interpretación y no actúo desde ahí.</div>
+    <button class="back" onclick="show('tools')">← Volver</button>
+  </div>
+
+  <div class="screen" id="t3">
+    <div class="label">Pensamientos pasajeros</div>
+    <div class="card"><div class="card-title">El volante</div><p>Imagina que vas en un carro. La ansiedad, los pensamientos y las interpretaciones pueden ir de pasajeros, y hablar fuerte. Pero el volante lo tienes tú.</p></div>
+    <div class="phrase">"Estoy teniendo el pensamiento de que…" <strong>y sigo conduciendo hacia donde quiero ir.</strong></div>
+    <div class="card"><p>No tienes que callar a los pasajeros. Solo no dejarlos manejar.</p></div>
+    <button class="back" onclick="show('tools')">← Volver</button>
+  </div>
+
+  <div class="screen" id="t4">
+    <div class="label">El impulso y la espera</div>
+    <div class="card"><div class="card-title">Arena movediza</div><p>Revisar el celular, interpretar cada detalle o dejar de responder para protegerte son formas de pelear con la arena. Alivian un momento y después te hunden más.</p></div>
+    <div class="card"><p>Soltar es quedarte quieta un rato, respirar, y dejar que el impulso suba, llegue a su pico y baje solo. Los impulsos pasan.</p></div>
+    <div class="phrase"><strong>Regla de espera:</strong> no actúo en el pico del impulso. Primero cuerpo, después decido.</div>
+    <button class="back" onclick="show('tools')">← Volver</button>
+  </div>
+
+  <div class="screen" id="t5">
+    <div class="label">Ser yo en la relación</div>
+    <div class="card"><div class="card-title">Responder desde ti</div><p>Si quieres hablar, hablas. Si quieres expresar algo, lo expresas. Y si decides no responder, que sea porque te estás cuidando, no para castigar.</p></div>
+    <div class="phrase">"Ser yo, también en esta relación."</div>
+    <button class="btn coral" onclick="show('quien')">¿Quién quiero ser en mi relación de pareja?</button>
+    <button class="back" onclick="show('tools')">← Volver</button>
+  </div>
+
+  <div class="screen" id="t6">
+    <div class="label">Pedir apoyo</div>
+    <div class="card"><p>Aceptar apoyo también es parte del proceso. No tienes que aguantar sola.</p></div>
+    <button class="btn" onclick="show('apoyo')">Ver frases para pedir apoyo</button>
+    <button class="back" onclick="show('tools')">← Volver</button>
+  </div>
+
+  <!-- QUIEN QUIERO SER -->
+  <div class="screen" id="quien">
+    <div class="label">Para mí</div>
+    <h2>¿Quién quiero ser en mi relación de pareja?</h2>
+    <div class="card">
+      <p>No hay respuesta correcta ni tiene que estar completa hoy. Es una pregunta para volver a ella cuando la ansiedad se calme.</p>
+    </div>
+    <div class="card">
+      <ul>
+        <li>Cuando quiero hablar, ¿me permito hablar?</li>
+        <li>Cuando quiero expresar algo, ¿lo expreso?</li>
+        <li>¿Qué me gustaría que él vea de mí?</li>
+        <li>¿Qué me hace bien en esta relación? ¿Qué no?</li>
+        <li>Cuando estoy ansiosa, ¿cómo quiero tratarme y tratarlo?</li>
+      </ul>
+    </div>
+    <label class="f" for="quienTxt">Con mis palabras</label>
+    <textarea id="quienTxt" rows="6" placeholder="Quiero ser alguien que…" oninput="saveQuien()"></textarea>
+    <div class="saved" id="quienSaved"></div>
+    <div class="phrase" style="margin-top:12px">"Ser yo, también en esta relación."</div>
+    <button class="back" onclick="show('home')">← Volver al inicio</button>
+  </div>
+
+  <!-- APOYO -->
+  <div class="screen" id="apoyo">
+    <div class="label">Necesito apoyo</div>
+    <div class="card"><p>Hablar con mamá es lo que más te calma. Eso es un recurso, úsalo.</p></div>
+    <div class="label">Para mamá</div>
+    <div class="phrase">"Mamá, estoy ansiosa y me ayudaría hablar contigo un rato."</div>
+    <div class="phrase">"No necesito que lo arregles, solo que me acompañes."</div>
+    <div class="label">Para mi mejor amiga</div>
+    <div class="phrase">"Estoy pasando por algo y quería contártelo, aunque me da un poco de pena."</div>
+    <div class="phrase">"¿Tienes un rato para escucharme?"</div>
+    <div class="card"><div class="card-title">Recuerda</div><p>La pena es normal, y puedes contar solo una parte para empezar. Pedir apoyo no es debilidad: es cuidarte.</p></div>
+    <button class="back" onclick="show('home')">← Volver al inicio</button>
+  </div>
+
+  <!-- REGISTRO -->
+  <div class="screen" id="registro">
+    <div class="label">Mi registro personal</div>
+    <div class="card">
+      <div class="card-title">Un momento ansioso</div>
+      <label class="f" for="rQue">¿Qué pasó?</label>
+      <textarea id="rQue" placeholder="Ej: Él no respondió en toda la tarde."></textarea>
+      <label class="f" for="rSent">¿Qué sentí y qué pensé?</label>
+      <textarea id="rSent" placeholder="Ej: Presión en el pecho. Pensé que ya no le importo."></textarea>
+      <label class="f" for="rFunc">¿Qué hice y qué me ayudó?</label>
+      <textarea id="rFunc" placeholder="Ej: Llamé a mamá, caminé un rato."></textarea>
+      <label class="f" for="rTipo">Etiqueta</label>
+      <select id="rTipo">
+        <option>Momento ansioso</option>
+        <option>Algo que me ayudó</option>
+        <option>Para hablar en sesión</option>
+        <option>Nota libre</option>
+      </select>
+      <button class="btn" style="margin-top:14px" onclick="saveEntry()">Guardar</button>
+    </div>
+    <div class="label">Lo que he anotado</div>
+    <div id="lista"></div>
+    <button class="back" onclick="show('home')">← Volver al inicio</button>
+  </div>
+
+</div>
+
+<script>
+  var current = 'home';
+  function show(id) {
+    var cur = document.getElementById(current);
+    if (cur) cur.classList.remove('active');
+    document.getElementById(id).classList.add('active');
+    current = id;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (id === 'pausa') startBreath(); else stopBreath();
+    if (id === 'registro') renderEntries();
+    if (id === 'quien') loadQuien();
+  }
+
+  /* Respiración 4-4-6, 3 ciclos */
+  var bTimer = null;
+  function stopBreath() { clearTimeout(bTimer); }
+  function startBreath() {
+    stopBreath();
+    var ring = document.getElementById('ring');
+    var instr = document.getElementById('binstr');
+    var count = document.getElementById('bcount');
+    var again = document.getElementById('bagain');
+    again.style.display = 'none';
+    var phases = [
+      { label: 'Inhala', text: 'Inhala despacio por la nariz, 4 segundos.', big: true, ms: 4000 },
+      { label: 'Sostén', text: 'Sostén el aire, 4 segundos.', big: true, ms: 4000 },
+      { label: 'Exhala', text: 'Exhala lentamente, 6 segundos.', big: false, ms: 6000 }
+    ];
+    var cycle = 0, ph = 0;
+    ring.style.transitionDuration = '1s';
+    ring.classList.remove('big');
+    function step() {
+      if (cycle >= 3) {
+        ring.textContent = 'Aquí';
+        ring.classList.remove('big');
+        instr.textContent = 'Antes de pensar, vuelve al cuerpo. No tienes que resolver nada ahora.';
+        count.textContent = 'listo';
+        again.style.display = 'inline-block';
+        return;
+      }
+      var p = phases[ph];
+      ring.textContent = p.label;
+      ring.style.transitionDuration = (p.ms / 1000) + 's';
+      ring.classList.toggle('big', p.big);
+      instr.textContent = p.text;
+      count.textContent = 'respiración ' + (cycle + 1) + ' de 3';
+      bTimer = setTimeout(function () {
+        ph++;
+        if (ph >= phases.length) { ph = 0; cycle++; }
+        step();
+      }, p.ms);
+    }
+    step();
+  }
+
+  /* Almacenamiento local (solo en este dispositivo) */
+  function lsGet(k, d) { try { var v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } }
+
+  /* Quién quiero ser */
+  var qTimer = null;
+  function loadQuien() { document.getElementById('quienTxt').value = lsGet('oa_quien', ''); }
+  function saveQuien() {
+    var v = document.getElementById('quienTxt').value;
+    lsSet('oa_quien', v);
+    var s = document.getElementById('quienSaved');
+    s.textContent = 'Guardado en este dispositivo';
+    clearTimeout(qTimer);
+    qTimer = setTimeout(function () { s.textContent = ''; }, 1500);
+  }
+
+  /* Registro */
+  function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>'); }
+  function getEntries() { try { return JSON.parse(lsGet('oa_registro', '[]')); } catch (e) { return []; } }
+  function saveEntry() {
+    var que = document.getElementById('rQue').value.trim();
+    var sent = document.getElementById('rSent').value.trim();
+    var func = document.getElementById('rFunc').value.trim();
+    if (!que && !sent && !func) return;
+    var now = new Date();
+    var fecha = now.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) + ' · ' +
+                now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+    var arr = getEntries();
+    arr.unshift({ id: Date.now(), fecha: fecha, tipo: document.getElementById('rTipo').value, que: que, sent: sent, func: func });
+    lsSet('oa_registro', JSON.stringify(arr));
+    ['rQue', 'rSent', 'rFunc'].forEach(function (i) { document.getElementById(i).value = ''; });
+    renderEntries();
+  }
+  function delEntry(id) {
+    lsSet('oa_registro', JSON.stringify(getEntries().filter(function (e) { return e.id !== id; })));
+    renderEntries();
+  }
+  function renderEntries() {
+    var box = document.getElementById('lista');
+    var arr = getEntries();
+    if (!arr.length) {
+      box.innerHTML = '<div class="empty">Todavía no has anotado nada.<br>Lo que escribas aquí solo lo ves tú, en este dispositivo.</div>';
+      return;
+    }
+    box.innerHTML = arr.map(function (e) {
+      var h = '<div class="entry"><div class="entry-top"><span class="entry-date">' + esc(e.fecha) + ' · ' + esc(e.tipo) +
+              '</span><button class="entry-del" title="Borrar" onclick="delEntry(' + e.id + ')">×</button></div>';
+      if (e.que) h += '<p><span>Qué pasó</span>' + esc(e.que) + '</p>';
+      if (e.sent) h += '<p><span>Sentí y pensé</span>' + esc(e.sent) + '</p>';
+      if (e.func) h += '<p><span>Qué me ayudó</span>' + esc(e.func) + '</p>';
+      return h + '</div>';
+    }).join('');
+  }
+</script>
+</body>
+</html>
